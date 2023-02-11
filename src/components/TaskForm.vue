@@ -15,15 +15,29 @@
             name : name.value, 
             description: description.value
         };
-        tasksStore.tasks.push(task); 
         
         if(tasksStore.selectedTask) {
             tasksStore.selectedTask = null;
         }
 
-        name.value = "";
-        description.value = "";
+        if(name.value !== "") {
+            tasksStore.createTask(task);
+            _clearForm();
+        }
+
         
+        
+    }
+
+    function _clearForm() {
+    name.value = "";
+    description.value = "";
+    }
+
+    function cancelUpdate() {
+        tasksStore.createTask(tasksStore.selectedTask);
+        tasksStore.selectedTask = null;
+        _clearForm();
     }
     
     tasksStore.$subscribe((mutation) => {
@@ -65,6 +79,14 @@
       >
       {{ tasksStore.selectedTask ? 'Enregister' : 'Créer' }}
         
+      </button>
+
+      <button
+          v-if="tasksStore.selectedTask"
+          class="bg-red-100 text-red-600 px-6 py-3 rounded font-semibold "
+          @click="cancelUpdate"
+      >
+        Annuler
       </button>
       
     </div>
